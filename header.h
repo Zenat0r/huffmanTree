@@ -31,6 +31,9 @@ typedef struct stat{
 
 typedef Node* Tree;
 
+#define TAILLE_MAX 255
+
+char * getSourceFile(char* fileName);
 File * empiler(File * f, Table* tab);
 Tree createNode(char cara, int poid);
 File * createFile();
@@ -39,6 +42,8 @@ void travelPreFixe(Tree root);
 void generateBinary(Tree root, int code, int position, Table tab[]);
 File * empilerForTree(File * f, Node* monNode);
 void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]);
-
+void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]);
+void wholeCompression();
+void wholeDecompression();
 
 #endif // HEADER_H_INCLUDED

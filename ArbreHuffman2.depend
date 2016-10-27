@@ -13,3 +13,15 @@
 	<stdlib.h>
 	"header.h"
 
+1477606148 source:c:\users\christophe\documents\pro\huffmantree\c.c
+	"header.h"
+
+1477605187 c:\users\christophe\documents\pro\huffmantree\header.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+
+1477605859 source:c:\users\christophe\documents\pro\huffmantree\main.c
+	"header.h"
+
