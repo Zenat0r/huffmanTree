@@ -5,8 +5,8 @@ void generateBinary(Tree root, int code, int position, Table tab[]){
         generateBinary(root->left, code << 1, position+1, tab);
         generateBinary(root->right, (code << 1) + 1, position+1, tab);
     } else {
-        tab[root->lettre -'A'].code = code;
-        tab[root->lettre -'A'].nbBits = position;
+        tab[root->lettre].code = code;
+        tab[root->lettre].nbBits = position;
 
     }
 }
@@ -31,7 +31,7 @@ File * createFile(){
 
 File * empiler(File * f, Table* tab){
     int i;
-    for(i=0; i<26; i++){
+    for(i=0; i<DYNAMIC_RANGE; i++){
         if(tab[i].poid != 0){
             if(f->head == NULL){
                 f->head = createNode(tab[i].lettre,tab[i].poid);
@@ -171,7 +171,7 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
 
     int i, nbCaraSource = 0;
     fseek(fDest, 4, SEEK_SET);
-    for(i=0; i<26; i++){
+    for(i=0; i<DYNAMIC_RANGE; i++){
         nbCaraSource += tab[i].poid;
         if(tab[i].poid != 0){
             fputc(tab[i].lettre,fDest);
@@ -187,9 +187,9 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
     caractere = fgetc(fsource);
 
     while(caractere != EOF){
-        buffer = buffer << tab[caractere - 'A'].nbBits;
-        buffer = buffer | tab[caractere - 'A'].code;
-        tailleBuffer += tab[caractere - 'A'].nbBits;
+        buffer = buffer << tab[caractere].nbBits;
+        buffer = buffer | tab[caractere].code;
+        tailleBuffer += tab[caractere].nbBits;
 
         caractere = fgetc(fsource);
         while(tailleBuffer >= 8){
@@ -205,10 +205,10 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
     fclose(fDest);
 }
 void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
-    Table tab[26];
+    Table tab[DYNAMIC_RANGE];
     int i;
-    for(i = 0; i<26; i++){
-        tab[i].lettre = 'A' + i;
+    for(i = 0; i<DYNAMIC_RANGE; i++){
+        tab[i].lettre = (char)i;
         tab[i].code = 0;
         tab[i].nbBits = 0;
         tab[i].poid = 0;
@@ -235,9 +235,9 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     char cara;
     while(caraCpt != nbCaraSource){
         cara = getc(fComp);
-        tab[cara - 'A'].lettre = cara;
-        tab[cara - 'A'].poid = getc(fComp);
-        caraCpt += tab[cara - 'A'].poid;
+        tab[cara].lettre = cara;
+        tab[cara].poid = getc(fComp);
+        caraCpt += tab[cara].poid;
     }
     long position =  ftell(fComp);
     fseek(fComp, position, SEEK_SET);
@@ -297,20 +297,21 @@ void wholeCompression(){
     scanf("%s", &fileToComp);
 
     char * data = getSourceFile(fileToComp);
-    Table tab[26];
+    Table tab[DYNAMIC_RANGE];
     int i;
-    for(i = 0; i<26; i++){
-        tab[i].lettre = 'A' + i;
+    for(i = 0; i<DYNAMIC_RANGE; i++){
+        tab[i].lettre = (char)i;
         tab[i].code = 0;
         tab[i].nbBits = 0;
         tab[i].poid = 0;
     }
     for(i=0; i<strlen(data); i++){
-        tab[data[i] - 'A'].poid++;
+        tab[data[i]].poid++;
     }
     /**creation de la file tiée**/
     File * maFile = createFile();
     maFile = empiler(maFile,tab);
+    Node* traveler = maFile->head;
 
     /**reation de l'arbre d'huffman**/
     Tree monArbre = NULL;
