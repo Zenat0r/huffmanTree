@@ -170,7 +170,7 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
     }
 
     int i, nbCaraSource = 0;
-    fseek(fDest, 4, SEEK_SET);
+    fseek(fDest, sizeof(int), SEEK_SET);
     for(i=0; i<26; i++){
         nbCaraSource += tab[i].poid;
         if(tab[i].poid != 0){
@@ -230,7 +230,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     /***récuparation du header******/
     /****longeurs plus table********/
     int nbCaraSource = getc(fComp);
-    fseek(fComp, 4, SEEK_SET);
+    fseek(fComp, sizeof(int), SEEK_SET);
     int caraCpt = 0;
     char cara;
     while(caraCpt != nbCaraSource){
