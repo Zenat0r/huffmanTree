@@ -178,9 +178,10 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
             fputc(tab[i].poid,fDest);
         }
     }
+    printf("lol : %d \n", nbCaraSource);
     long position =  ftell(fDest);
     fseek(fDest, 0, SEEK_SET);
-    fputc(nbCaraSource ,fDest);
+    fwrite(&nbCaraSource, sizeof(int), 1, fDest);
 
     fseek(fDest, position, SEEK_SET);
 
@@ -229,14 +230,16 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
 
     /***récuparation du header******/
     /****longeurs plus table********/
-    int nbCaraSource = getc(fComp);
+    int nbCaraSource;
+    fread(&nbCaraSource, sizeof(int), 1, fComp);
+
     fseek(fComp, 4, SEEK_SET);
     int caraCpt = 0;
     char cara;
     while(caraCpt != nbCaraSource){
-        cara = getc(fComp);
+        cara = fgetc(fComp);
         tab[cara].lettre = cara;
-        tab[cara].poid = getc(fComp);
+        tab[cara].poid = fgetc(fComp);
         caraCpt += tab[cara].poid;
     }
     long position =  ftell(fComp);
@@ -252,7 +255,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
 
     /***rechercher dans l'arbre*****/
     caraCpt = 0;
-    unsigned int buffer = getc(fComp);
+    unsigned int buffer = fgetc(fComp);
     int j = 7;
     unsigned int bit;
     Tree traveler = monArbre;
@@ -269,7 +272,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
             caraCpt++;
         }
         if(j==0){
-            buffer = getc(fComp);
+            buffer = fgetc(fComp);
             j = 8;
         }
         j--;
@@ -278,7 +281,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     fclose(fDest);
 }
 char * getSourceFile(char* fileName){
-    char data[TAILLE_MAX];
+    char data[FILE_MAX_CHAR];
 
     FILE* fichier = NULL;
     fichier = fopen(fileName, "r");
@@ -287,12 +290,13 @@ char * getSourceFile(char* fileName){
         exit(EXIT_FAILURE);
     }
 
-    fgets(data, TAILLE_MAX, fichier);
+    fgets(data, FILE_MAX_CHAR, fichier);
+    fclose(fichier);
 
-   return data;
+    return data;
 }
 void wholeCompression(){
-    char fileToComp[255];
+    char fileToComp[FILE_MAX_CHAR];
     printf("Entrez le fichier a decompresser : ");
     scanf("%s", &fileToComp);
 
@@ -324,7 +328,7 @@ void wholeCompression(){
     compression(tab, fileToComp, "result.txt");
 }
 void wholeDecompression(){
-    char fileToDecomp[255];
+    char fileToDecomp[FILE_MAX_CHAR];
     printf("Entrez le fichier a decompresser : ");
     scanf("%s", &fileToDecomp);
 

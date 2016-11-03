@@ -31,8 +31,8 @@ typedef struct stat{
 
 typedef Node* Tree;
 
-#define TAILLE_MAX 255
 #define DYNAMIC_RANGE 255
+#define FILE_MAX_CHAR 1000000
 char * getSourceFile(char* fileName);
 File * empiler(File * f, Table* tab);
 Tree createNode(char cara, int poid);

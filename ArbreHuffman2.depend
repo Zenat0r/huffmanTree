@@ -1,16 +1,14 @@
 # depslib dependency file v1.0
-1477315581 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\c.c
+1478183703 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\c.c
 	"header.h"
 
-1477315185 c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\header.h
+1478183833 c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\header.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 
-1477314783 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\main.c
-	<stdio.h>
-	<stdlib.h>
+1478163276 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\main.c
 	"header.h"
 
 1477612284 source:c:\users\christophe\documents\pro\huffmantree\c.c
