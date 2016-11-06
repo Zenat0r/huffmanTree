@@ -175,12 +175,12 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
         nbCaraSource += tab[i].poid;
         if(tab[i].poid != 0){
             fputc(tab[i].lettre,fDest);
-            fputc(tab[i].poid,fDest);
+            fwrite(&tab[i].poid, sizeof(int), 1, fDest);
         }
     }
     long position =  ftell(fDest);
     fseek(fDest, 0, SEEK_SET);
-    fputc(nbCaraSource ,fDest);
+    fwrite(&nbCaraSource, sizeof(int), 1, fDest);
 
     fseek(fDest, position, SEEK_SET);
 
@@ -229,14 +229,15 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
 
     /***récuparation du header******/
     /****longeurs plus table********/
-    int nbCaraSource = getc(fComp);
+    int nbCaraSource;
+    fread(&nbCaraSource, sizeof(int), 1, fComp);
     fseek(fComp, sizeof(int), SEEK_SET);
     int caraCpt = 0;
     char cara;
     while(caraCpt != nbCaraSource){
         cara = getc(fComp);
         tab[cara - 'A'].lettre = cara;
-        tab[cara - 'A'].poid = getc(fComp);
+        fread(&tab[cara - 'A'].poid, sizeof(int), 1, fComp);
         caraCpt += tab[cara - 'A'].poid;
     }
     long position =  ftell(fComp);
@@ -278,7 +279,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     fclose(fDest);
 }
 char * getSourceFile(char* fileName){
-    char data[TAILLE_MAX];
+    char * data;
 
     FILE* fichier = NULL;
     fichier = fopen(fileName, "r");
@@ -286,13 +287,17 @@ char * getSourceFile(char* fileName){
         perror("Erreur dans l'ouverture du fichier a compresser");
         exit(EXIT_FAILURE);
     }
+    fseek(fichier, 0, SEEK_END);
+    int length = ftell(fichier);
+    fseek(fichier, 0, SEEK_SET);
 
-    fgets(data, TAILLE_MAX, fichier);
-
-   return data;
+    data = malloc(length*sizeof(char));
+    fgets(data, length + 1, fichier);
+    fclose(fichier);
+    return data;
 }
 void wholeCompression(){
-    char fileToComp[255];
+    char fileToComp[256];
     printf("Entrez le fichier a decompresser : ");
     scanf("%s", &fileToComp);
 
@@ -323,7 +328,7 @@ void wholeCompression(){
     compression(tab, fileToComp, "result.txt");
 }
 void wholeDecompression(){
-    char fileToDecomp[255];
+    char fileToDecomp[256];
     printf("Entrez le fichier a decompresser : ");
     scanf("%s", &fileToDecomp);
 
