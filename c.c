@@ -199,7 +199,7 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
         }
     }
     if(tailleBuffer != 0){
-        code = code << (8 - tailleBuffer);
+        code = buffer << (8 - tailleBuffer);
         fputc(code, fDest);
     }
     fclose(fsource);
@@ -292,7 +292,8 @@ char * getSourceFile(char* fileName){
     int length = ftell(fichier);
     fseek(fichier, 0, SEEK_SET);
 
-    data = malloc(length*sizeof(char));
+
+    data = malloc((length+1) * sizeof(char));
     fgets(data, length + 1, fichier);
     fclose(fichier);
     return data;
