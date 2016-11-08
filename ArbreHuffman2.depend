@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1478183703 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\c.c
+1478520656 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\c.c
 	"header.h"
 
 1478183833 c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\header.h
@@ -8,7 +8,7 @@
 	<stdbool.h>
 	<string.h>
 
-1478163276 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\main.c
+1478609245 source:c:\users\csier\documents\pro\eilco\progei1\arbrehuffman2\main.c
 	"header.h"
 
 1477612284 source:c:\users\christophe\documents\pro\huffmantree\c.c

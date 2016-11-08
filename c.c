@@ -120,10 +120,8 @@ Tree defiler(File * f){
     Node * principal;
     Node * right = NULL;
     Node * left = NULL;
-    Node * traveler;
 
     while(f->head != f->foot){
-        traveler = f->head;
         right = NULL;
         left = NULL;
 
@@ -175,10 +173,9 @@ void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
         nbCaraSource += tab[i].poid;
         if(tab[i].poid != 0){
             fputc(tab[i].lettre,fDest);
-            fputc(tab[i].poid,fDest);
+            fwrite(&tab[i].poid, sizeof(int), 1, fDest);
         }
     }
-    printf("lol : %d \n", nbCaraSource);
     long position =  ftell(fDest);
     fseek(fDest, 0, SEEK_SET);
     fwrite(&nbCaraSource, sizeof(int), 1, fDest);
@@ -209,7 +206,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     Table tab[DYNAMIC_RANGE];
     int i;
     for(i = 0; i<DYNAMIC_RANGE; i++){
-        tab[i].lettre = (char)i;
+        tab[i].lettre = i;
         tab[i].code = 0;
         tab[i].nbBits = 0;
         tab[i].poid = 0;
@@ -233,13 +230,13 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     int nbCaraSource;
     fread(&nbCaraSource, sizeof(int), 1, fComp);
 
-    fseek(fComp, 4, SEEK_SET);
+    fseek(fComp, sizeof(int), SEEK_SET);
     int caraCpt = 0;
     char cara;
     while(caraCpt != nbCaraSource){
         cara = fgetc(fComp);
         tab[cara].lettre = cara;
-        tab[cara].poid = fgetc(fComp);
+        fread(&tab[cara].poid, sizeof(int), 1, fComp);
         caraCpt += tab[cara].poid;
     }
     long position =  ftell(fComp);
@@ -252,6 +249,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     Tree monArbre = NULL;
 
     monArbre = defiler(maFile);
+    travelPreFixe(monArbre);
 
     /***rechercher dans l'arbre*****/
     caraCpt = 0;
@@ -281,7 +279,7 @@ void decompression(char nomFichierCompresse[], char nomFichierdecompresse[]){
     fclose(fDest);
 }
 char * getSourceFile(char* fileName){
-    char data[FILE_MAX_CHAR];
+    char * data;
 
     FILE* fichier = NULL;
     fichier = fopen(fileName, "r");
@@ -290,7 +288,13 @@ char * getSourceFile(char* fileName){
         exit(EXIT_FAILURE);
     }
 
-    fgets(data, FILE_MAX_CHAR, fichier);
+    fseek(fichier, 0, SEEK_END);
+    int length = ftell(fichier);
+    fseek(fichier, 0, SEEK_SET);
+
+    data = malloc(length * sizeof(char));
+
+    fgets(data, length + 1, fichier);
     fclose(fichier);
 
     return data;
@@ -301,10 +305,11 @@ void wholeCompression(){
     scanf("%s", &fileToComp);
 
     char * data = getSourceFile(fileToComp);
+
     Table tab[DYNAMIC_RANGE];
     int i;
     for(i = 0; i<DYNAMIC_RANGE; i++){
-        tab[i].lettre = (char)i;
+        tab[i].lettre = i;
         tab[i].code = 0;
         tab[i].nbBits = 0;
         tab[i].poid = 0;
@@ -315,11 +320,12 @@ void wholeCompression(){
     /**creation de la file tiée**/
     File * maFile = createFile();
     maFile = empiler(maFile,tab);
-    Node* traveler = maFile->head;
+
 
     /**reation de l'arbre d'huffman**/
     Tree monArbre = NULL;
     monArbre = defiler(maFile);
+    travelPreFixe(monArbre);
 
     /***generation du code binaire**/
     generateBinary(monArbre,0,0,tab);
