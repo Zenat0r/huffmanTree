@@ -8,7 +8,7 @@
 
 typedef struct node{
     char lettre;
-    int poid;
+    unsigned int poid;
     bool toSort;
 
     struct node * next;
@@ -24,7 +24,7 @@ typedef struct file{
 
 typedef struct stat{
     char lettre;
-    int poid;
+    unsigned int poid;
     int code;
     int nbBits;
 } Table;
