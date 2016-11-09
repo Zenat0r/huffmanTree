@@ -142,13 +142,6 @@ Tree defiler(File * f){
     }
     return f->head;
 }
-void travelPreFixe(Tree root){
-    if(root!=NULL){
-        printf("%c",root->lettre);
-        travelPreFixe(root->left);
-        travelPreFixe(root->right);
-    }
-}
 void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]){
     FILE * fsource, * fDest;
     char caractere;
@@ -300,7 +293,7 @@ char * getSourceFile(char* fileName){
 }
 void wholeCompression(){
     char fileToComp[256];
-    printf("Entrez le fichier a decompresser : ");
+    printf("Entrez le fichier a compresser : ");
     scanf("%s", &fileToComp);
 
     char * data = getSourceFile(fileToComp);

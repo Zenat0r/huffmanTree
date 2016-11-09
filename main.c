@@ -21,7 +21,7 @@ int main()
                 printf("\nFichier decompresse sous le nom de 'decompress.txt' avec success !");
             break;
         }
-        printf("\nAppuiez sur 3 pour effectuer une nouvelle operation\nTapez autre chose pour quitter !");
+        printf("\nAppuiez sur 3 pour effectuer une nouvelle operation\nTapez autre chose pour quitter !\n");
         scanf("%d", &menu);
     }
     return 0;

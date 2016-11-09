@@ -31,14 +31,13 @@ typedef struct stat{
 
 typedef Node* Tree;
 
-#define TAILLE_MAX 255
+#define TAILLE_MAX 256
 
 char * getSourceFile(char* fileName);
 File * empiler(File * f, Table* tab);
 Tree createNode(char cara, int poid);
 File * createFile();
 Tree defiler(File * f);
-void travelPreFixe(Tree root);
 void generateBinary(Tree root, int code, int position, Table tab[]);
 File * empilerForTree(File * f, Node* monNode);
 void compression(Table tab[], char nomFichier[], char nomFichierCompresse[]);
